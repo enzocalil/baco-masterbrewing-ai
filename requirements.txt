@@ -1,0 +1,7 @@
+docling
+pydantic
+sqlalchemy
+faiss-cpu
+openai
+python-dotenv
+python-telegram-bot
