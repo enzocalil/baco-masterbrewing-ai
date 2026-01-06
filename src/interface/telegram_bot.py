@@ -66,8 +66,8 @@ Se o usuário perguntar algo técnico, RESPONDA DIRETAMENTE.
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
-            "📜 Você entra na sala de brassagem de Baco. O ancião levanta o olhar dos seus pergaminhos...\n\n"
-            "'Aproxima-se, aprendiz. Traga suas dúvidas ou mostre-me o fruto do seu trabalho (PDF/Foto).'"
+            "Você entra na sala de brassagem de Baco. O ancião levanta o olhar dos seus pergaminhos...\n\n"
+            "'Aproxima-se, aprendiz. Traga suas dúvidas ou mostre-me o fruto do seu trabalho.'"
         )
 
     async def handle_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
