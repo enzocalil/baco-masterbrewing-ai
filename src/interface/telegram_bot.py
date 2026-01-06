@@ -3,6 +3,7 @@ import sys
 import logging
 import base64
 import json
+import re
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from groq import Groq
@@ -21,6 +22,17 @@ from src.rag.retriever import RecipeRetriever
 from src.agent.orchestrator import BrewerAgent
 # from src.ingestion.pdf_handler import BeerDocReader (Removido)
 from src.storage.database import BeerDatabase
+
+def strip_markdown(text: str) -> str:
+    """Remove formatação markdown (**, *, _, etc.) do texto."""
+    # Remove bold (**texto**)
+    text = re.sub(r'\*\*([^\*]+)\*\*', r'\1', text)
+    # Remove italic (*texto* ou _texto_)
+    text = re.sub(r'\*([^\*]+)\*', r'\1', text)
+    text = re.sub(r'_([^_]+)_', r'\1', text)
+    # Remove code (`texto`)
+    text = re.sub(r'`([^`]+)`', r'\1', text)
+    return text
 
 class BacoBot:
     def __init__(self):
@@ -98,7 +110,9 @@ Se o usuário perguntar algo técnico, RESPONDA DIRETAMENTE.
             self.db.save_chat_message(user_id, "user", pergunta)
             self.db.save_chat_message(user_id, "assistant", resposta)
 
-            await update.message.reply_text(resposta)
+            # Remove formatação markdown antes de enviar
+            resposta_limpa = strip_markdown(resposta)
+            await update.message.reply_text(resposta_limpa)
         except Exception as e:
             logger.error(f"Erro no pensamento: {e}")
             await update.message.reply_text("'Meus pensamentos se nublaram. O Mestre Clóvis exigiria mais clareza.'")
@@ -123,7 +137,8 @@ Se o usuário perguntar algo técnico, RESPONDA DIRETAMENTE.
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64_image}"}}
                 ]}]
             )
-            await update.message.reply_text(response.choices[0].message.content)
+            resposta_vision = strip_markdown(response.choices[0].message.content)
+            await update.message.reply_text(resposta_vision)
         except Exception as e:
             logger.error(f"Erro Vision: {e}")
             await update.message.reply_text("'Minha visão falhou. A luz deve ser mais pura para a ciência de Clóvis.'")
