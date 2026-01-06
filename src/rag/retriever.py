@@ -56,8 +56,12 @@ class RecipeRetriever:
                     
                     final_list = sorted(deduped_map.values())
                     
-                    summary = "--- ÍNDICE DAS OBRAS DE CLÓVIS ---\n"
-                    summary += f"Acervo Completo e Unificado: {', '.join(final_list) if final_list else 'Nenhum'}\n"
+                    summary = "=== ESCRITURAS DE CLÓVIS: LISTA COMPLETA E EXAUSTIVA ===\n"
+                    summary += f"Total de receitas catalogadas: {len(final_list)}\n\n"
+                    summary += "RECEITAS EXISTENTES (NÃO INVENTE OUTRAS):\n"
+                    for i, recipe in enumerate(final_list, 1):
+                        summary += f"{i}. {recipe}\n"
+                    summary += "\n⚠️ ESTA É A LISTA COMPLETA. NÃO EXISTEM OUTRAS RECEITAS.\n"
                     results.append(summary)
 
                 # --- 2. BUSCA DE CONTEÚDO (Para ler maltes/lúpulos) ---
